@@ -2,11 +2,6 @@
   Filename    : Camera MQTT Client
   Description : ESP32-CAM MQTT Image Transfer
 **********************************************************************/
-#include "esp_camera.h"
-#include <WiFi.h>
-#include <PubSubClient.h>
-// CAMERA_MODEL is defined in platformio.ini
-#include "camera_pins.h"
  
 // ===========================
 // Configuration
