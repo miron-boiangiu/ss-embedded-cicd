@@ -13,9 +13,9 @@
 // ===========================
 const char* ssid     = "KiwiNetwork";       // TODO: Modificați cu SSID-ul rețelei voastre
 const char* password = "mamaliga";     // TODO: Modificați cu parola rețelei voastre
-const char* mqtt_server = "10.202.123.52"; // TODO: Modificați cu IP-ul calculatorului (ip addr / ipconfig)
+const char* mqtt_server = "broker.hivemq.com"; // TODO: Modificați cu IP-ul calculatorului (ip addr / ipconfig)
 const int mqtt_port = 1883;
- 
+
 // Topics
 const char* TOPIC_COMMAND = "ssproject/commands";
 const char* TOPIC_IMAGE   = "ssproject/images";
