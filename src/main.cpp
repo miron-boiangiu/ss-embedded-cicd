@@ -4,6 +4,7 @@
 **********************************************************************/
 #include "esp_camera.h"
 #include <WiFi.h>
+#include <WiFiClientSecure.h>
 #include <PubSubClient.h>
 // CAMERA_MODEL is defined in platformio.ini
 #include "camera_pins.h"
@@ -11,16 +12,38 @@
 // ===========================
 // Configuration
 // ===========================
-const char* ssid     = "KiwiNetwork";       // TODO: Modificați cu SSID-ul rețelei voastre
-const char* password = "mamaliga";     // TODO: Modificați cu parola rețelei voastre
-const char* mqtt_server = "broker.hivemq.com"; // TODO: Modificați cu IP-ul calculatorului (ip addr / ipconfig)
-const int mqtt_port = 1883;
+const char* ssid     = "UPB-Guest";       // TODO: Modificați cu SSID-ul rețelei voastre
+const char* password = "";     // TODO: Modificați cu parola rețelei voastre
+const char* mqtt_server = "10.41.207.19"; // TODO: Modificați cu IP-ul calculatorului (ip addr / ipconfig)
+const int mqtt_port = 8883;
 
 // Topics
 const char* TOPIC_COMMAND = "ssproject/commands";
 const char* TOPIC_IMAGE   = "ssproject/images";
  
-WiFiClient espClient;
+const char* ca_cert = 
+"-----BEGIN CERTIFICATE----- \n" \
+"MIIDETCCAfmgAwIBAgIUXGivQ9J8ElHsIHkqh2pIxM57Fj4wDQYJKoZIhvcNAQEL\n" \
+"BQAwGDEWMBQGA1UEAwwNU1MtUHJvamVjdC1DQTAeFw0yNjAzMzAxODEzMjlaFw0z\n" \
+"NjAzMjcxODEzMjlaMBgxFjAUBgNVBAMMDVNTLVByb2plY3QtQ0EwggEiMA0GCSqG\n" \
+"SIb3DQEBAQUAA4IBDwAwggEKAoIBAQC7w+i8VD4wLBWRHBM5SsfgZVg8azx+5RKf\n" \
+"LzJzHdFE6NLBq+angYmxR9me7oOMtzUgWO0czgSTTA3/vrDl3rqWnyWiX5k07Q8l\n" \
+"9+OW0Z3Kb8e6iQAFV9uNZp8CMFLpx4CY1/lTSUt5v+HJTRn2iX6SHELQJjzI0vBB\n" \
+"Oz7NWbpQ12UQdw9w70w/vDRJTMzLPVSEuKJbQsWKHDOj2MMuQF1OZDn3qnd6yFDl\n" \
+"P6FrDr25XbG24LVPAwYVXQr9tA/3EFoZuJ4q8Vg3uZZlgmcifyt8dayagpswsgQk\n" \
+"tdYuzIdNCwshiEMzgQfhQ6VqJX351KeRydZpjM5HxKMdVgcfDMtBAgMBAAGjUzBR\n" \
+"MB0GA1UdDgQWBBTF34D7N1PhGSOKR5RD/oIge97voTAfBgNVHSMEGDAWgBTF34D7\n" \
+"N1PhGSOKR5RD/oIge97voTAPBgNVHRMBAf8EBTADAQH/MA0GCSqGSIb3DQEBCwUA\n" \
+"A4IBAQB9qtnbMy3BBD9xvhCTHgYADR3Hadx8oh597eScfzxhGmEPHH8hXEurmbxx\n" \
+"i4kDAJHgquHb4CXUiGyyUywI6PDaAsCP8hNeq6OR9n4QKy0PlDbfXW9o38szCvg+\n" \
+"3tljL4ePLRYmCUkFCIYaLShZ+xGToUUWMO31r9/l6zPHiwiH7sPvq24grTeb3u7P\n" \
+"kXDs07t1IoT72bpPCCiHLG8senCAoMWZ2YOMx1z1Iu/tV8JO3+guZSlPeltzXvKW\n" \
+"TFXAVAJFBz6sj3wfe27ovXmoPXzjlIPBT4vHYxfSTZMNb2456B/IY4Vbw8m76YGM\n" \
+"hpDiqYRvKyUTJkZgYHa6W3x0/R33\n" \
+"-----END CERTIFICATE-----";
+
+
+WiFiClientSecure espClient;
 PubSubClient client(espClient);
  
 // State variables
@@ -136,14 +159,15 @@ void setup() {
   setup_camera();
  
   Serial.printf("Connecting to WiFi: %s\n", ssid);
+  espClient.setCACert(ca_cert);
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
   }
   Serial.printf("\nWiFi connected! IP: %s\n", WiFi.localIP().toString().c_str());
- 
-  client.setServer(mqtt_server, mqtt_port);
+  
+  client.setServer(mqtt_server, 8883);
   client.setCallback(callback);
   client.setBufferSize(65000); 
 }
