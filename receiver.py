@@ -3,9 +3,11 @@ import cv2
 import numpy as np
 import threading
  
+
+
 # Configuration
-BROKER = "broker.hivemq.com"  # TODO: Modificați cu IP-ul brokerului vostru
-PORT = 1883
+BROKER = "10.41.207.19"  # TODO: Modificați cu IP-ul brokerului vostru
+PORT = 8883
 TOPIC_IMAGE = "ssproject/images"
 TOPIC_COMMAND = "ssproject/commands"
  
@@ -45,7 +47,8 @@ def main():
     client.on_message = on_message
  
     try:
-        client.connect(BROKER, PORT, 60)
+        client.tls_set(ca_certs="certs/ca.crt")
+        client.connect(BROKER, 8883, 60)
         client.loop_start()
  
         print("\n--- ESP32 Camera Controller ---")
